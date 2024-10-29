@@ -1,0 +1,6 @@
+chroma
+__pycache__
+venv
+data/code-snippets
+data/content
+note.txt
