@@ -4,3 +4,5 @@ venv
 data/code-snippets
 data/content
 note.txt
+cleaned_doc
+.env
