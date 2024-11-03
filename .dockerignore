@@ -1,0 +1,6 @@
+cleaned_docs
+venv
+.env
+note.txt
+__pycache__
+local-requirements.txt

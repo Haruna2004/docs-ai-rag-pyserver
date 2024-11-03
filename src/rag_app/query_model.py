@@ -1,23 +1,43 @@
 from langchain.prompts import ChatPromptTemplate
-from .helpers import get_chroma_db,PROMPT_TEMPLATE,MODEL_TEMP, GROQ_MODEL_ID
+from src.rag_app.helpers import get_chroma_db,PROMPT_TEMPLATE,MODEL_TEMP, GROQ_MODEL_ID 
 from langchain_groq import ChatGroq
 from models import ResponseData
 from dotenv import load_dotenv 
+import os
 
 load_dotenv()
 
+groq_key = os.getenv('GROQ_API_KEY')
 TOP_RETRIVAL_COUNT=5
 RELEVANCE_TRESHOLD=0.6
 
-def query_model(query_text: str) -> ResponseData:
-    db = get_chroma_db()
-    results = get_search_result(db,query_text)
-    prompt = get_prompt(results,query_text)
-    response = get_llm_response(prompt)
-    final_response = format_response(response,results)
-    # print(final_response)
-    return final_response
 
+
+def query_model(query_text: str) -> ResponseData:
+    try:
+        db = get_chroma_db()
+        results = get_search_result(db,query_text)
+        if results == None:
+            return no_result()
+        prompt = get_prompt(results,query_text)
+        response = get_llm_response(prompt)
+        final_response = format_response(response,results)
+        return final_response
+    except Exception as e:
+        return ResponseData(
+       content=f"Error in query_model: {e}",
+       sources=[],
+       total_tokens=0
+   )
+
+
+def no_result():
+   response = ResponseData(
+       content="Sorry, I wasn't able to answer your question using the Paystack docs.",
+       sources=[],
+       total_tokens=0
+   )
+   return response
 
 
 def get_search_result(db,query_text):
@@ -40,7 +60,8 @@ def get_prompt(results,query_text):
 def get_llm_response(prompt):
     model = ChatGroq(
         model = GROQ_MODEL_ID,
-        temperature=MODEL_TEMP
+        temperature=MODEL_TEMP,
+        api_key=groq_key
     )
     print("Processing AI response..." )
     response = model.invoke(prompt)

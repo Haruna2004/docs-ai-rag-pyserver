@@ -1,0 +1,12 @@
+langchain
+chromadb # Vector storage
+pytest
+unstructured==0.14.4 # Document loading
+fastembed # unistall after upgrade to openAI
+langchain_chroma
+langchain_groq
+langchain_community
+# pip install "unstructured[md]
+# If pop_db.py is stuck in loading 
+#documents run this in terminal
+# pip install python-magic python-magic-bin

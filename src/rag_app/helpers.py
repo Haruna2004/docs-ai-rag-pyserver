@@ -37,14 +37,14 @@ def save_to_folder(documents: list[Document], output_folder: str, file_ext:str):
     print(f"Saved {len(documents)} documents to {output_folder}.")
 
 # System prompt for llm - Change this
-PROMPT_TEMPLATE = """
-Answer the question based only on the following context:
-
+PROMPT_TEMPLATE = """ 
+You are Paystack Docs asssistant. Users will ask question on using paystack. You can add additional details, code that is useful.
+Answer the question using  the following context:
 {context}
-
 ---
-
 Answer the question based on the above context: {question}
 """
 GROQ_MODEL_ID="mixtral-8x7b-32768"
 MODEL_TEMP=0.5
+
+

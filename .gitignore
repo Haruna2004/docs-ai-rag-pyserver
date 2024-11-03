@@ -6,3 +6,4 @@ data/content
 note.txt
 cleaned_doc
 .env
+Dockerfile
