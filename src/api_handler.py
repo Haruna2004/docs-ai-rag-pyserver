@@ -32,6 +32,17 @@ def query_docs_endpoint(query_text: str):
         apiResponse.message = "API Request not successfull"
     return apiResponse
 
+@app.post("/query_ai_fw", response_model=APIResponse)
+def query_docs_fw(query_text: str):
+    response = query_model(query_text)
+    # create api response
+    apiResponse = APIResponse(success=True, message="API Request is successfull", data=response)
+    # Handle error in response
+    if len(response.sources) == 0:
+        apiResponse.success = False
+        apiResponse.message = "API Request not successfull"
+    return apiResponse
+
 
 if __name__ == "__main__":
     # Run this as a server directly

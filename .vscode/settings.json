@@ -1,0 +1,7 @@
+{
+  "files.exclude": {
+    "**/cleaned_doc": true,
+    "**/data": true,
+    "chroma": true
+  }
+}

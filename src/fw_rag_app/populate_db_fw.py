@@ -1,49 +1,59 @@
 import os
 import shutil 
-from helpers import get_embedding_function
+import re
+from helpers_fw import get_embedding_function
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter 
 from langchain.schema.document import Document
 from langchain_chroma import Chroma
-from bs4 import BeautifulSoup 
+from bs4 import BeautifulSoup
+from langchain_community.document_loaders import RecursiveUrlLoader
 
 from dotenv import load_dotenv
 load_dotenv()
 
 # Constants
-DATA_PATH = "data/content"
-CHROMA_PATH = "chroma/v1"
+BASE_URL="https://developer.flutterwave.com/"
+MAX_DEPTH=2
+CHROMA_PATH = "chroma_fw/v1"
 CHUNK_SIZE=800
 CHUNK_OVERLAP=80
 
 
-def main():    
-    # Create (or update) the datastore
-    documents = load_documents()
-    cleaned_documents = clean_documents(documents)
-    chunks = split_documents(cleaned_documents)
+def main(): 
+    # Create the datastore
+    documents = load_web_pages()
+    chunks = split_documents(documents)
     save_to_chroma(chunks)
 
-# load the document from directory
-def load_documents():
-    document_loader = DirectoryLoader(DATA_PATH,show_progress=True, 
-    glob="**/*.mdx",
-    use_multithreading=True, silent_errors=True)
-    print("Loading Documents...")
-    return document_loader.load()
+def bs4_extractor(html: str) -> str:
+    soup = BeautifulSoup(html, "lxml")
 
-# Remove HTML tags
-def clean_document(document: Document):
-    soup = BeautifulSoup(document.page_content, 'html.parser')
-    return soup.get_text(strip=True)
+    # Find the specific article elements
+    article_content = soup.find("article", class_="content__article")
+    # Extract text if the specified element exists, otherwise return an empty string
+    if article_content:
+        text = article_content.get_text()
+    else:
+        text = ""
+     # Clean up newlines and whitespace
+    return re.sub(r"\n\n+", "\n\n", text).strip()
 
-# Extract plain text only
-def clean_documents(documents: list[Document]):
-    cleaned_documents = []
-    for doc in documents:
-        cleaned_text = clean_document(doc)
-        cleaned_documents.append(Document(page_content=cleaned_text, metadata=doc.metadata))
-    return cleaned_documents
+# load web documents 
+def load_web_pages():
+    loader = RecursiveUrlLoader(
+        url=BASE_URL,
+        max_depth=MAX_DEPTH,
+        continue_on_failure=True,
+        prevent_outside=True,
+        base_url=BASE_URL,
+        extractor=bs4_extractor
+    )
+    print("🕸️ Loading web pages...")
+    documents = loader.load()
+    print("✔️ Webpages successfully loaded")
+    return documents
+
 
 # Split each file into smaller chunks
 def split_documents(documents: list[Document]):
@@ -57,6 +67,7 @@ def split_documents(documents: list[Document]):
     print(f"Split {len(documents)} documents into len {len(chunks)} chunks.")
     return chunks
 
+
 # Add chunks with metadata to vector store
 def save_to_chroma(chunks: list[Document]):
     # Clear out the database first. 
@@ -69,7 +80,6 @@ def save_to_chroma(chunks: list[Document]):
     )
     db.add_documents(chunks)
     print(f"Saved {len(chunks)} chunks to {CHROMA_PATH}")
-
 
 if __name__ == "__main__":
     main()
