@@ -1,6 +1,6 @@
 from langchain.prompts import ChatPromptTemplate
 from langchain_groq import ChatGroq
-from src.fw_rag_app.helpers_fw import get_chroma_db,PROMPT_TEMPLATE,MODEL_TEMP, GROQ_MODEL_ID 
+from src.fw_rag_app.helpers_fw import get_chroma_db,PROMPT_TEMPLATE,MODEL_TEMP, GROQ_MODEL_ID
 from models import ResponseData
 from dotenv import load_dotenv
 import os
@@ -80,4 +80,5 @@ def format_response(response, results) -> ResponseData:
 
 
 if __name__ == "__main__":
-    query_model_fw("how do I add payment to an android app?")
+    response = query_model_fw("accept payment")
+    print(response)

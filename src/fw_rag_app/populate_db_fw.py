@@ -14,7 +14,7 @@ load_dotenv()
 
 # Constants
 BASE_URL="https://developer.flutterwave.com/"
-MAX_DEPTH=2
+MAX_DEPTH=4
 CHROMA_PATH = "chroma_fw/v1"
 CHUNK_SIZE=800
 CHUNK_OVERLAP=80
@@ -51,7 +51,11 @@ def load_web_pages():
     )
     print("🕸️ Loading web pages...")
     documents = loader.load()
-    print("✔️ Webpages successfully loaded")
+    print(f"✔️ successfully loaded {len(documents)} documents")
+    if len(documents) == 0:
+        print("Zero documents loaded")
+        exit(0)
+    print(documents[0].metadata,"\n-----\n" ,documents[1].metadata)
     return documents
 
 

@@ -2,6 +2,7 @@ from fastapi import FastAPI
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from rag_app.query_model import query_model
+from fw_rag_app.query_model_fw import query_model_fw
 from models import APIResponse
 
 
@@ -34,7 +35,7 @@ def query_docs_endpoint(query_text: str):
 
 @app.post("/query_ai_fw", response_model=APIResponse)
 def query_docs_fw(query_text: str):
-    response = query_model(query_text)
+    response = query_model_fw(query_text)
     # create api response
     apiResponse = APIResponse(success=True, message="API Request is successfull", data=response)
     # Handle error in response

@@ -1,7 +1,8 @@
 {
   "files.exclude": {
     "**/cleaned_doc": true,
-    "**/data": true,
-    "chroma": true
+    "**/__pycache__": true
+    // "**/data": true,
+    // "chroma": true
   }
 }

@@ -1,5 +1,5 @@
 from langchain.prompts import ChatPromptTemplate
-from src.rag_app.helpers import get_chroma_db,PROMPT_TEMPLATE,MODEL_TEMP, GROQ_MODEL_ID 
+from src.rag_app.helpers import get_chroma_db,PROMPT_TEMPLATE,MODEL_TEMP, GROQ_MODEL_ID
 from langchain_groq import ChatGroq
 from models import ResponseData
 from dotenv import load_dotenv 
@@ -10,7 +10,6 @@ load_dotenv()
 groq_key = os.getenv('GROQ_API_KEY')
 TOP_RETRIVAL_COUNT=5
 RELEVANCE_TRESHOLD=0.6
-
 
 
 def query_model(query_text: str) -> ResponseData:
