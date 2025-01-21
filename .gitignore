@@ -1,9 +1,12 @@
 chroma_fw
 chroma
+chroma_sq
 __pycache__
 venv
+data
 data/code-snippets
 data/content
+data/squad
 note.txt
 cleaned_doc
 .env
