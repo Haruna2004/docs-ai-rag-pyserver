@@ -5,6 +5,7 @@ from models import ResponseData
 from dotenv import load_dotenv 
 import os
 
+
 load_dotenv()
 
 groq_key = os.getenv('GROQ_API_KEY')
@@ -12,7 +13,7 @@ TOP_RETRIVAL_COUNT=5
 RELEVANCE_TRESHOLD=0.6
 
 
-def query_model(query_text: str) -> ResponseData:
+def query_model_sq(query_text: str) -> ResponseData:
     try:
         db = get_chroma_db()
         results = get_search_result(db,query_text)
@@ -32,7 +33,7 @@ def query_model(query_text: str) -> ResponseData:
 
 def no_result():
    response = ResponseData(
-       content="Sorry, I wasn't able to answer your question using the Paystack docs.",
+       content="Sorry, I wasn't able to answer your question using the Squad docs.",
        sources=[],
        total_tokens=0
    )
@@ -79,4 +80,4 @@ def format_response(response, results) -> ResponseData:
 
 
 if __name__ == "__main__":
-    query_model("how do I add payment to an android app?")
+    query_model_sq("how do I add squad payment to a react website?")
